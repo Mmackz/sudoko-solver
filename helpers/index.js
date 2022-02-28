@@ -36,3 +36,16 @@ export function splitToRows(string) {
    }
    return arr;
 }
+
+export function validateCoordinate(input) {
+   return /^[a-f][1-9]$/.test(input);
+}
+
+export function validateValue(input) {
+   return /^[1-9]$/.test(input);
+}
+
+export function convertCoordinates(input) {
+   const [letter, number] = input.split("");
+   return [letter.toUpperCase().charCodeAt(0) - 65, number - 1];
+}

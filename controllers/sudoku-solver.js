@@ -79,6 +79,4 @@ class SudokuSolver {
 
 const solver = new SudokuSolver();
 
-console.log(solver.solve(testPuzzle));
-
 module.exports = SudokuSolver;
