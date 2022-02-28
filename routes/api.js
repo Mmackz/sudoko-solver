@@ -60,5 +60,32 @@ module.exports = function (app) {
       }
    });
 
-   app.route("/api/solve").post((req, res) => {});
+   app.route("/api/solve").post((req, res) => {
+      const { puzzle } = req.body;
+
+      // check if puzzle field is included
+      if (!puzzle) {
+         res.json({ error: "required field missing" });
+      }
+
+      // check length of puzzle is the required 81 characters
+      else if (puzzle.length != 81) {
+         res.json({ error: "Expected puzzle to be 81 characters long" });
+      }
+
+      // check for invalid characters in puzzle
+      else if (!solver.validate(puzzle)) {
+         res.json({ error: "Invalid characters in puzzle" });
+      }
+
+      // puzzle is valid, check if it can be solved
+      else {
+         const solution = solver.solve(puzzle);
+         if (!solution) {
+            res.json({ error: "Puzzle cannot be solved" })
+         } else {
+            res.json({ solution })
+         }
+      }
+   });
 };
