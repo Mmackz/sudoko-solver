@@ -1,41 +1,53 @@
-import { puzzlesAndSolutions } from "../controllers/puzzle-strings";
-const [testPuzzle, testSolution] = puzzlesAndSolutions[0];
+import { getColumn, getRegion, getRow } from "../helpers";
+import { splitToRows } from "../helpers";
 
-function splitToRows(string) {
-   const arr = [];
-   for (let i = 9; i <= 81; i += 9) {
-      arr.push([...string.slice(i - 9, i)]);
-   }
-   return arr;
+function safeToPlace(board, row, col, val) {
+   const puzzle = board.flat();
+   return (
+      solver.checkColPlacement(puzzle, row, col, val) &&
+      solver.checkRowPlacement(puzzle, row, col, val) &&
+      solver.checkRegionPlacement(puzzle, row, col, val)
+   );
 }
 
-function getRegion(string, row, col) {
-   const arr = [];
-   const regionNum = Math.floor(row / 3) * 3 + Math.floor(col / 3);
-   for (let i = 0; i < 81; i++) {
-      if (i == row * 9 + col) continue;
-      const regionRow = Math.floor(Math.floor(i / 9) / 3) * 3;
-      if (Math.floor(i / 3) - 3 * Math.floor(i / 9) + regionRow === regionNum) {
-         arr.push(testSolution[i])
+function solveSudoku(grid, row = 0, col = 0) {
+   // return true if end of grid is reached.
+   if (row == 8 && col == 9) {
+      return true;
+   }
+
+   // if column overflowing, reset column to 0 and increment row
+   if (col > 8) {
+      row++;
+      col = 0;
+   }
+
+   // if item is a pre-set value, move to next column
+   if (grid[row][col] !== ".") {
+      return solveSudoku(grid, row, col + 1);
+   }
+
+   // start checking if any numbers 1-9 can be placed
+   for (let i = 1; i <= 9; i++) {
+      // if item is safe to place, enter it into grid and start checking next row
+      if (safeToPlace(grid, row, col, i)) {
+         grid[row][col] = i;
+         if (solveSudoku(grid, row, col + 1)) {
+            return true;
+         } else {
+            // if number does not lead to solved board, replace with placeholders
+            grid[row][col] = ".";
+         }
       }
    }
-   return arr;
-}
 
-function getRow(string, row) {
-   return [...string.slice(row * 9, row * 9 + 9)];
-}
-
-function getColumn(string, col) {
-   const arr = [];
-   for (let i = col; i < 81; i += 9) {
-      arr.push(string[i]);
-   }
-   return arr;
+   // if no number found, return false and continue checking from previous frame
+   return false;
 }
 
 class SudokuSolver {
    validate(puzzleString) {
+      // validates puzzle is 81 characters and only contains valid characters
       return /^[1-9\.]{81}$/.test(puzzleString);
    }
 
@@ -53,18 +65,20 @@ class SudokuSolver {
       return !arr.some((val) => val == value);
    }
 
-   checkRegionPlacement(puzzleString, row, column, value) {}
+   checkRegionPlacement(puzzleString, row, column, value) {
+      // returns true if value can be placed in region, otherwise false
+      return !getRegion(puzzleString, row, column).some((val) => val == value);
+   }
 
-   solve(puzzleString) {}
+   solve(puzzleString) {
+      const grid = splitToRows(puzzleString);
+      const solved = solveSudoku(grid);
+      return solved ? grid.flat().join("") : false;
+   }
 }
 
 const solver = new SudokuSolver();
 
-console.log(solver.checkColPlacement(testPuzzle, 0, 0, 2));
-// console.log(splitStringToRows(testPuzzle));
-console.log(getRegion(testPuzzle, 0));
+console.log(solver.solve(testPuzzle));
 
 module.exports = SudokuSolver;
-
-
-
