@@ -54,7 +54,7 @@ module.exports = function (app) {
 
          // if conflicts found, attach to returned json
          if (conflicts.length) {
-            json.conflicts = conflicts;
+            json.conflict = conflicts;
          }
          res.json(json);
       }
@@ -65,7 +65,7 @@ module.exports = function (app) {
 
       // check if puzzle field is included
       if (!puzzle) {
-         res.json({ error: "required field missing" });
+         res.json({ error: "Required field missing" });
       }
 
       // check length of puzzle is the required 81 characters

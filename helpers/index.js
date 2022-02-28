@@ -38,7 +38,7 @@ export function splitToRows(string) {
 }
 
 export function validateCoordinate(input) {
-   return /^[a-f][1-9]$/.test(input);
+   return /^[a-f][1-9]$/i.test(input);
 }
 
 export function validateValue(input) {
