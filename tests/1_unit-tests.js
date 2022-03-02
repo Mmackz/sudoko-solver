@@ -1,5 +1,4 @@
 const chai = require("chai");
-const { suite } = require("mocha");
 const assert = chai.assert;
 
 import { puzzlesAndSolutions } from "../controllers/puzzle-strings.js";
