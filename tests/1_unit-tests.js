@@ -124,6 +124,11 @@ suite("UnitTests", function () {
          test("valid puzzle passes solver", function (done) {
             testPuzzles.forEach((puzzle) => {
                assert.isOk(solver.solve(puzzle), "puzzle should be solvable");
+               assert.lengthOf(
+                  [...solver.solve(puzzle)].filter((char) => char !== "."),
+                  81,
+                  "solved puzzle should not contain any dots"
+               );
             });
             done();
          });
@@ -135,10 +140,14 @@ suite("UnitTests", function () {
 
          test("returns the expected solution for valid puzzles", function (done) {
             puzzlesAndSolutions.slice(0, 5).forEach((puzzle) => {
-               assert.equal(solver.solve(puzzle[0]), puzzle[1], "return and expected solution should match");
-            })
+               assert.equal(
+                  solver.solve(puzzle[0]),
+                  puzzle[1],
+                  "return and expected solution should match"
+               );
+            });
             done();
-         })
+         });
       });
    });
 });

@@ -10,7 +10,7 @@ function safeToPlace(board, row, col, val) {
    );
 }
 
-function solveSudoku(grid, row = 0, col = 0) {
+function findSolution(grid, row = 0, col = 0) {
    // return true if end of grid is reached.
    if (row == 8 && col == 9) {
       return true;
@@ -22,9 +22,9 @@ function solveSudoku(grid, row = 0, col = 0) {
       col = 0;
    }
 
-   // if item is a pre-set value, move to next column
+   // if item is a pre-set value, skip it
    if (grid[row][col] !== ".") {
-      return solveSudoku(grid, row, col + 1);
+      return findSolution(grid, row, col + 1);
    }
 
    // start checking if any numbers 1-9 can be placed
@@ -32,16 +32,17 @@ function solveSudoku(grid, row = 0, col = 0) {
       // if item is safe to place, enter it into grid and start checking next row
       if (safeToPlace(grid, row, col, i)) {
          grid[row][col] = i;
-         if (solveSudoku(grid, row, col + 1)) {
+         if (findSolution(grid, row, col + 1)) {
             return true;
          } else {
-            // if number does not lead to solved board, replace with placeholders
+            // if number does not lead to solved board, reset back to dot
+            // and continue checking 1-9
             grid[row][col] = ".";
          }
       }
    }
 
-   // if no number found, return false and continue checking from previous frame
+   // if no number can be placed return false and continue checking from previous frame
    return false;
 }
 
@@ -72,7 +73,7 @@ class SudokuSolver {
 
    solve(puzzleString) {
       const grid = splitToRows(puzzleString);
-      const solved = solveSudoku(grid);
+      const solved = findSolution(grid);
       return solved ? grid.flat().join("") : false;
    }
 }
