@@ -16,6 +16,7 @@ suite("UnitTests", function () {
    suite("solver method tests", function () {
       suite(".validate() outputs", function () {
          test("valid puzzle string of 81 characters", function (done) {
+            assert.lengthOf(puzzle[0], 81, "puzzle length should be 81");
             testPuzzles.forEach((puzzle) => {
                assert.isTrue(
                   solver.validate(puzzle),
@@ -122,6 +123,7 @@ suite("UnitTests", function () {
 
       suite(".solve() outputs", function () {
          test("valid puzzle passes solver", function (done) {
+            assert.lengthOf(testPuzzles[0], 81, "puzzle length should be 81");
             testPuzzles.forEach((puzzle) => {
                assert.isOk(solver.solve(puzzle), "puzzle should be solvable");
                assert.lengthOf(
@@ -139,6 +141,12 @@ suite("UnitTests", function () {
          });
 
          test("returns the expected solution for valid puzzles", function (done) {
+            const [puzzle, solution] = puzzlesAndSolutions[0];
+            assert.equal(
+               solver.solve(puzzle),
+               solution,
+               "solved puzzle should match solution"
+            );
             puzzlesAndSolutions.slice(0, 5).forEach((puzzle) => {
                assert.equal(
                   solver.solve(puzzle[0]),
