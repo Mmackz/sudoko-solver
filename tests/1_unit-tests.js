@@ -16,7 +16,8 @@ suite("UnitTests", function () {
    suite("solver method tests", function () {
       suite(".validate() outputs", function () {
          test("valid puzzle string of 81 characters", function (done) {
-            assert.lengthOf(puzzle[0], 81, "puzzle length should be 81");
+            const [puzzle] = testPuzzles;
+            assert.lengthOf(puzzle, 81, "puzzle length should be 81");
             testPuzzles.forEach((puzzle) => {
                assert.isTrue(
                   solver.validate(puzzle),
